@@ -17,6 +17,7 @@ class VideosBloc implements BlocBase {
 
   VideosBloc() {
     api = Api();
+    videos = [];
 
     _searchController.stream.listen(_search);
   }

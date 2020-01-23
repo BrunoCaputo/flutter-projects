@@ -27,6 +27,14 @@ class Api {
     return decode(response);
   }
 
+  Future<List<Video>> trending() async {
+    http.Response response = await http.get(
+      "https://www.googleapis.com/youtube/v3/videos?part=snippet&chart=mostPopular&regionCode=BR&maxResults=25&key=$API_KEY",
+    );
+
+    return decode(response);
+  }
+
   List<Video> decode(http.Response response) {
     if (response.statusCode == 200) {
       var decoded = json.decode(response.body);

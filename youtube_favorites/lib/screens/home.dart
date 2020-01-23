@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:youtube_favorites/blocs/favorite_bloc.dart';
 
+import 'package:youtube_favorites/api.dart';
+import 'package:youtube_favorites/blocs/favorite_bloc.dart';
 import 'package:youtube_favorites/blocs/videos_bloc.dart';
 import 'package:youtube_favorites/delegates/data_search.dart';
 import 'package:bloc_pattern/bloc_pattern.dart';
@@ -11,6 +12,8 @@ import 'package:youtube_favorites/widgets/video_tile.dart';
 class Home extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
+    Api api = Api();
+    List<Video> videos;
     final bloc = BlocProvider.of<VideosBloc>(context);
 
     return Scaffold(
@@ -87,7 +90,20 @@ class Home extends StatelessWidget {
               itemCount: snapshot.data.length + 1,
             );
           } else {
-            return Container();
+            return ListView.builder(
+              itemBuilder: (context, index) {
+                return FutureBuilder<List<Video>>(
+                  future: api.trending(),
+                  initialData: [],
+                  builder: (context, snapshot) {
+                    if (snapshot.hasData)
+                      return VideoTile(null);
+                    else
+                      return Container();
+                  },
+                );
+              },
+            );
           }
         },
       ),
